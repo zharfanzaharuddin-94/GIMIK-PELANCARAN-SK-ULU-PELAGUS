@@ -130,6 +130,9 @@
         &#8635; Ulang Semula
     </button>
 
+    <!-- KOD BAHARU: Skrin Layar Video (Disembunyikan pada awal) -->
+    <video id="video-gimik" src="./Video-Gimik.mp4" class="fixed inset-0 w-full h-full object-cover z-[80] opacity-0 pointer-events-none hidden" playsinline></video>
+
     <!-- KOD BAHARU: Sistem Audio Gimik (Ditambah 'loop' supaya main tanpa henti) -->
     <audio id="audio-suspen" src="./muzik-gimik.mp3" preload="auto" loop></audio>
     <audio id="audio-tepukan" src="./bunyi-mercun.mp3" preload="auto" loop></audio>
@@ -149,6 +152,7 @@
         const scissorsCursor = document.getElementById('scissors-cursor');
         const resetBtn = document.getElementById('reset-btn');
         const headerText = document.getElementById('header-text');
+        const videoGimik = document.getElementById('video-gimik'); // Daftarkan ID Video
         
         let pieces = [];
         let letupanBerterusan; // Pembolehubah untuk mengawal letupan tanpa henti
@@ -249,45 +253,63 @@
 
             setTimeout(() => {
                 ribbonContainer.style.opacity = 0;
-            }, 1000);
 
-            // KOD BAHARU: Mainkan muzik suspen/berdebar bermula sekarang
+                // KOD BAHARU: Sebaik sahaja reben jatuh (selepas 1 saat), paparkan skrin video dan mainkan video
+                videoGimik.classList.remove('hidden');
+                gsap.to(videoGimik, { opacity: 1, duration: 1, pointerEvents: 'auto' });
+                videoGimik.currentTime = 0;
+                videoGimik.play().catch(e => console.log("Menunggu Video dimuat naik"));
+            }, 1000);
+        });
+
+        // KOD BAHARU: Pengesan (Sensor) apabila video tamat dimainkan
+        videoGimik.addEventListener('ended', () => {
+            
+            // 1. Pudarkan skrin video dan sembunyikan kembali
+            gsap.to(videoGimik, { 
+                opacity: 0, 
+                duration: 1.5, 
+                pointerEvents: 'none',
+                onComplete: () => videoGimik.classList.add('hidden')
+            });
+
+            // 2. Barulah mainkan muzik gimik/berdebar mengiringi puzzle (Muzik Letupan belum mula)
             const laguSuspen = document.getElementById('audio-suspen');
             if(laguSuspen) {
                 laguSuspen.currentTime = 0;
                 laguSuspen.play().catch(e => console.log("Menunggu MP3 dimuat naik"));
             }
 
-            // Dedahkan bekas header terlebih dahulu
-            gsap.to(headerText, { opacity: 1, duration: 0.5 });
+            // 3. Dedahkan bekas header
+            gsap.to(headerText, { opacity: 1, duration: 0.5, delay: 0.5 });
             
-            // KOD BAHARU: Efek Sapuan Cahaya Kiri-ke-Kanan (Cinematic Reveal).
-            // Durasi diperlahankan kepada 15 SAAT diselaraskan tepat dengan durasi puzzle di bawah.
+            // 4. Mulakan Teks dan Kaca Serentak (Tunggu 0.5 saat selepas skrin video mula pudar)
             gsap.to('#tajuk-baris-1', {
                 clipPath: 'inset(0 0% 0 0)',
                 webkitClipPath: 'inset(0 0% 0 0)',
-                duration: 15, // 10 saat puzzle terbang + 5 saat stagger gelombang
-                ease: 'power3.inOut' // Kuasa brek dilaras sama dengan kaca (seiring/sync)
+                duration: 15,
+                ease: 'power3.inOut',
+                delay: 0.5
             });
 
-            // Mulakan animasi kemunculan dari ghaib berserta penyusunan yang sangat diperlahankan
             gsap.to('.puzzle-piece', {
-                opacity: 1, // Kaca muncul dari ghaib
+                opacity: 1,
                 x: 0,
                 y: 0,
                 z: 0,
-                rotationX: 0, // Akan berpusing dari 1080 darjah kembali ke 0
+                rotationX: 0,
                 rotationY: 0,
                 rotationZ: 0,
                 scale: 1,
-                duration: 10, // Kepingan terbang berpusing selama 10 saat penuh
-                ease: 'power3.inOut', // Brek lembut di penghujung
+                duration: 10,
+                ease: 'power3.inOut',
+                delay: 0.5, // Mula serentak dengan teks
                 stagger: {
-                    amount: 5, // Jarak masa gelombang dari kiri ke kanan ditambah kepada 5 saat
+                    amount: 5,
                     grid: [rows, cols],
-                    from: "start" // Gelombang dari kiri ke kanan
+                    from: "start"
                 },
-                onComplete: finalizeLaunch // Jumlah Total = 10 + 5 = 15 Saat
+                onComplete: finalizeLaunch // Bila 15 saat siap, fungsi letupan & muzik mercun dipanggil
             });
         });
 
@@ -333,6 +355,15 @@
         // KOD BAHARU: FUNGSI RESET PUZZLE KEMBALI KE ASAL
         // =========================================================================
         resetBtn.addEventListener('click', () => {
+            // KOD BAHARU: Matikan skrin video jika ia sedang dimainkan
+            if(videoGimik) {
+                videoGimik.pause();
+                videoGimik.currentTime = 0;
+                videoGimik.style.opacity = 0;
+                videoGimik.classList.add('hidden');
+                videoGimik.style.pointerEvents = 'none';
+            }
+
             // KOD BAHARU: Matikan semua muzik apabila diulang semula
             const laguSuspen = document.getElementById('audio-suspen');
             const laguTepukan = document.getElementById('audio-tepukan');
