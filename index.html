@@ -209,9 +209,10 @@
                     // Tetapkan kedudukan berterabur (rawak) di sekeliling skrin untuk permulaan
                     const randomX = (Math.random() - 0.5) * window.innerWidth * 1.5;
                     const randomY = (Math.random() - 0.5) * window.innerHeight * 1.5;
-                    const randomRotateX = (Math.random() - 0.5) * 360;
-                    const randomRotateY = (Math.random() - 0.5) * 360;
-                    const randomRotateZ = (Math.random() - 0.5) * 180;
+                    // KOD BAHARU: Putaran dinaikkan ke 1080 (3 pusingan penuh) supaya ia berpusing rancak di udara
+                    const randomRotateX = (Math.random() - 0.5) * 1080;
+                    const randomRotateY = (Math.random() - 0.5) * 1080;
+                    const randomRotateZ = (Math.random() - 0.5) * 720;
                     const randomZ = Math.random() * 500 - 250; // Kedalaman 3D
 
                    gsap.set(piece, {
@@ -261,32 +262,32 @@
             gsap.to(headerText, { opacity: 1, duration: 0.5 });
             
             // KOD BAHARU: Efek Sapuan Cahaya Kiri-ke-Kanan (Cinematic Reveal).
-            // Durasi 10.5 saat ini diselaraskan tepat 100% dengan durasi puzzle + stagger di bawah.
+            // Durasi diperlahankan kepada 15 SAAT diselaraskan tepat dengan durasi puzzle di bawah.
             gsap.to('#tajuk-baris-1', {
                 clipPath: 'inset(0 0% 0 0)',
                 webkitClipPath: 'inset(0 0% 0 0)',
-                duration: 10.5,
+                duration: 15, // 10 saat puzzle terbang + 5 saat stagger gelombang
                 ease: 'power3.inOut' // Kuasa brek dilaras sama dengan kaca (seiring/sync)
             });
 
-            // Mulakan animasi kemunculan dari ghaib berserta penyusunan yang diperlahankan
+            // Mulakan animasi kemunculan dari ghaib berserta penyusunan yang sangat diperlahankan
             gsap.to('.puzzle-piece', {
                 opacity: 1, // Kaca muncul dari ghaib
                 x: 0,
                 y: 0,
                 z: 0,
-                rotationX: 0,
+                rotationX: 0, // Akan berpusing dari 1080 darjah kembali ke 0
                 rotationY: 0,
                 rotationZ: 0,
                 scale: 1,
-                duration: 7, // Diperlahankan kepada 7 saat (Magnetik Slow-Motion)
+                duration: 10, // Kepingan terbang berpusing selama 10 saat penuh
                 ease: 'power3.inOut', // Brek lembut di penghujung
                 stagger: {
-                    amount: 3.5, // Mengambil masa 3.5 saat dari kepingan pertama ke terakhir
+                    amount: 5, // Jarak masa gelombang dari kiri ke kanan ditambah kepada 5 saat
                     grid: [rows, cols],
-                    from: "start" // Gelombang dari kiri ke kanan (top-left to bottom-right)
+                    from: "start" // Gelombang dari kiri ke kanan
                 },
-                onComplete: finalizeLaunch
+                onComplete: finalizeLaunch // Jumlah Total = 10 + 5 = 15 Saat
             });
         });
 
@@ -359,9 +360,9 @@
             pieces.forEach(piece => {
                 const randomX = (Math.random() - 0.5) * window.innerWidth * 1.5;
                 const randomY = (Math.random() - 0.5) * window.innerHeight * 1.5;
-                const randomRotateX = (Math.random() - 0.5) * 360;
-                const randomRotateY = (Math.random() - 0.5) * 360;
-                const randomRotateZ = (Math.random() - 0.5) * 180;
+                const randomRotateX = (Math.random() - 0.5) * 1080; // Sama seperti Lokasi 1
+                const randomRotateY = (Math.random() - 0.5) * 1080;
+                const randomRotateZ = (Math.random() - 0.5) * 720;
                 const randomZ = Math.random() * 500 - 250;
 
                 gsap.to(piece, {
