@@ -78,19 +78,12 @@
     <!-- Background particles/stars (Simple CSS) -->
     <div class="absolute inset-0 z-0 opacity-30 pointer-events-none" style="background-image: radial-gradient(#fff 1px, transparent 1px); background-size: 50px 50px;"></div>
 
-    <!-- Header Text (Hidden initially) -->
-    <div id="header-text" class="absolute top-16 md:top-20 z-20 text-center opacity-0">
-        <!-- KOD BAHARU: Teks diletakkan siap-siap, disembunyikan menggunakan 'clip-path' untuk disapu dari kiri -->
-        <h1 id="tajuk-baris-1" class="title-font text-3xl md:text-5xl lg:text-6xl text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-yellow-100 to-yellow-500 tracking-widest drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)] min-h-[3rem] md:min-h-[4rem]" style="clip-path: inset(0 100% 0 0); -webkit-clip-path: inset(0 100% 0 0);">MAJLIS PELANCARAN</h1>
-        <p id="tajuk-baris-2" class="mt-2 text-yellow-200 tracking-[0.2em] md:tracking-[0.3em] uppercase text-xs md:text-base drop-shadow-md min-h-[1.5rem]"></p>
-    </div>
-
-    <!-- 3D Scene Container -->
-    <div id="scene" class="w-full z-10 flex justify-center items-center mt-32 md:mt-36 mb-10">
-        <!-- The Puzzle Container (Sangat Besar Menggunakan CSS Asli Inline) -->
-        <div id="puzzle-container" class="relative mx-auto rounded-lg shadow-2xl" style="width: 90vw; max-width: 1500px; aspect-ratio: 16/9;">
-            <!-- Full seamless image (hidden until end to cover grid lines) -->
-            <div id="final-image" class="rounded-lg border-2 border-yellow-500/50"></div>
+    <!-- 3D Scene Container (KOD BAHARU: Skrin Penuh 100% & Teks MAJLIS PELANCARAN dibuang sepenuhnya) -->
+    <div id="scene" class="fixed inset-0 w-screen h-screen z-10 overflow-hidden">
+        <!-- The Puzzle Container -->
+        <div id="puzzle-container" class="relative w-full h-full">
+            <!-- Full seamless image -->
+            <div id="final-image"></div>
             <!-- Pieces will be injected here via JS -->
         </div>
     </div>
@@ -151,7 +144,6 @@
         const ribbonText = document.getElementById('ribbon-text');
         const scissorsCursor = document.getElementById('scissors-cursor');
         const resetBtn = document.getElementById('reset-btn');
-        const headerText = document.getElementById('header-text');
         const videoGimik = document.getElementById('video-gimik'); // Daftarkan ID Video
         
         let pieces = [];
@@ -280,19 +272,9 @@
                 laguSuspen.play().catch(e => console.log("Menunggu MP3 dimuat naik"));
             }
 
-            // 3. Dedahkan bekas header
-            gsap.to(headerText, { opacity: 1, duration: 0.5, delay: 0.5 });
-            
-            // 4. Mulakan Teks dan Kaca Serentak (Tunggu 0.5 saat selepas skrin video mula pudar)
-            gsap.to('#tajuk-baris-1', {
-                clipPath: 'inset(0 0% 0 0)',
-                webkitClipPath: 'inset(0 0% 0 0)',
-                duration: 15,
-                ease: 'power3.inOut',
-                delay: 0.5
-            });
-
+              // 3. Mulakan Kaca Serentak (Tunggu 0.5 saat selepas skrin video mula pudar)
             gsap.to('.puzzle-piece', {
+
                 opacity: 1,
                 x: 0,
                 y: 0,
@@ -377,15 +359,8 @@
             resetBtn.style.pointerEvents = 'none';
             gsap.to(resetBtn, { opacity: 0, duration: 0.5 });
 
-            // 2. Pudarkan gambar penuh dan teks tajuk
+            // 2. Pudarkan gambar penuh
             gsap.to(finalImage, { opacity: 0, duration: 1 });
-            gsap.to(headerText, { opacity: 0, duration: 1 });
-            
-            // Set semula efek sapuan teks supaya tertutup kembali ke kiri
-            setTimeout(() => {
-                gsap.set('#tajuk-baris-1', { clipPath: 'inset(0 100% 0 0)', webkitClipPath: 'inset(0 100% 0 0)' });
-                document.getElementById('tajuk-baris-2').innerHTML = '';
-            }, 1000);
 
             // 3. Hamburkan semula kepingan puzzle ke tempat rawak & jadikan ghaib
             pieces.forEach(piece => {
