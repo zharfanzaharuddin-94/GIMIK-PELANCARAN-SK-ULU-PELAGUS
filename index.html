@@ -78,12 +78,12 @@
     <!-- Background particles/stars (Simple CSS) -->
     <div class="absolute inset-0 z-0 opacity-30 pointer-events-none" style="background-image: radial-gradient(#fff 1px, transparent 1px); background-size: 50px 50px;"></div>
 
-    <!-- 3D Scene Container (KOD BAHARU: Skrin Penuh 100% & Teks MAJLIS PELANCARAN dibuang sepenuhnya) -->
-    <div id="scene" class="fixed inset-0 w-screen h-screen z-10 overflow-hidden">
-        <!-- The Puzzle Container -->
-        <div id="puzzle-container" class="relative w-full h-full">
+    <!-- 3D Scene Container (KOD BAHARU: Saiz diturunkan sedikit untuk ruang letupan bunga api) -->
+    <div id="scene" class="fixed inset-0 w-screen h-screen z-10 flex justify-center items-center overflow-hidden">
+        <!-- The Puzzle Container (Dikecilkan kepada 85%-90% lebar skrin supaya ada sempadan/bingkai) -->
+        <div id="puzzle-container" class="relative w-[95vw] md:w-[85vw] max-w-[1400px] aspect-video rounded-xl shadow-[0_20px_50px_rgba(0,0,0,0.8)]">
             <!-- Full seamless image -->
-            <div id="final-image"></div>
+            <div id="final-image" class="rounded-xl border-2 border-yellow-500/40"></div>
             <!-- Pieces will be injected here via JS -->
         </div>
     </div>
