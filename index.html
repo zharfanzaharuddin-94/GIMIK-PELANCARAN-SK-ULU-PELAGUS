@@ -130,8 +130,9 @@
         &#8635; Ulang Semula
     </button>
 
-    <!-- KOD BAHARU: Skrin Layar Video (Disembunyikan pada awal) -->
-    <video id="video-gimik" src="./Video-Gimik.mp4" class="fixed inset-0 w-full h-full object-cover z-[80] opacity-0 pointer-events-none hidden" playsinline></video>
+    <!-- KOD BAHARU: Skrin Layar Video (Ditambah preload="auto" supaya dimuat turun awal di belakang tabir) -->
+    <video id="video-gimik" src="./Video-Gimik.mp4" preload="auto" class="fixed inset-0 w-full h-full object-cover z-[80] opacity-0 pointer-events-none hidden" playsinline></video>
+
 
     <!-- KOD BAHARU: Sistem Audio Gimik (Ditambah 'loop' supaya main tanpa henti) -->
     <audio id="audio-suspen" src="./muzik-gimik.mp3" preload="auto" loop></audio>
